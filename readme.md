@@ -24,7 +24,7 @@ Here is the file structure graph :
 ### Tag element
 
 The **tag element** describes a XML tag. Here is the structure :
-```json
+```jsonc
 {
     "name": "my_tag",       // Mandatory property
     "isRoot": false,        // Defaults to false
