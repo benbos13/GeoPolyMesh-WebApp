@@ -54,7 +54,7 @@ This describes the following tag :
 ### Arg element
 
 The **arg element** describes a XML tag argument. Here is the structure :
-```json
+```jsonc
 {
     "name": "my_arg",       // Mandatory property
     "type": "uint8",        // Mandatory property
@@ -97,7 +97,7 @@ Note that the RegExp is constructed as follows :
 ### Node element
 
 The **node element** describes how a XML tag should be inside the XML hierarchy. Here is the structure :
-```json
+```jsonc
 {
     "tag": "my_tag",        // Mandatory property
     "isMandatory": false,   // Defaults to false
@@ -132,7 +132,7 @@ This describes the following structure :
 ### Enum element
 
 The **enum element** describes how a choice of tag can be made at a given level. Here is the structure :
-```json
+```jsonc
 {
     "isEnum": true,     // Mandatory property, must be true
     "enumCount": 1,     // Defaults to 1
