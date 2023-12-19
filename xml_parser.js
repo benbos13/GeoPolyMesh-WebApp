@@ -25,16 +25,19 @@ function read(file_url) {
  * Reads a tag from file.
  * @param {string} file The file body in string.
  * @param {number} start The index from which we read bytes.
- * @returns {[index: number, tag, is_self_closed: boolean]} The index at the end of tag, the tag and if it was self-closed.
+ * @returns {[index: number, tag]} The index at the end of tag and the tag.
  */
 function readTag(file, start) {
     let tag = { name: "", args: {} };
     let index = start + 1;
+
     let current_token = "";
     let current_string = "";
     let token_count = 0;
+    
     let is_affecting = false;
     let is_self_closed = false;
+    let is_closing = false;
     
     Logger.assert(file[start] == "<", SyntaxError, "\"start\" should be the index of the first \"<\" character.");
 
@@ -42,7 +45,12 @@ function readTag(file, start) {
         Logger.assert(file[index] && file[index] != "<", SyntaxError, "Tag should always be closed by \">\" character.");
 
         if (file[index] == "/") {
-            is_self_closed = true;
+            if (token_count == 0) {
+                is_closing = true;
+            } else {
+                is_self_closed = true;
+            }
+
             index++;
         }
 
@@ -53,7 +61,8 @@ function readTag(file, start) {
 
         if (file[index].match(/[0-9a-zA-Z_\-]/)) {
             Logger.assert(!is_self_closed, SyntaxError, "Tag can not contain caracters other than \" \" or \">\" after beeing self-closed.");
-            
+            Logger.assert(!is_closing || token_count < 1, SyntaxError, "Closing Tag must only contain the tag's name.");
+
             [index, current_token] = readToken(file, index);
             token_count++;
 
@@ -81,7 +90,11 @@ function readTag(file, start) {
         }
     }
 
-    return [index, tag, is_self_closed];
+    Logger.assert(token_count, SyntaxError, "Tag should have a name.")
+
+    tag.is_closing = is_self_closed || is_closing
+
+    return [index, tag];
 }
 
 
@@ -115,7 +128,7 @@ function readString(file, start) {
     let index = start + 1;
     let delimiter = file[start];
 
-    while (file[index] && (file[index] != delimiter || file[index] == delimiter && file[index - 1] == "\\")) {
+    while (file[index] && (file[index] != delimiter || file[index - 1] == "\\")) {
         string += file[index];
         index++;
     }
@@ -123,4 +136,3 @@ function readString(file, start) {
     return [index + 1, string];
 }
 
-Logger.log(readTag(`<test value="ok" />`, 0));

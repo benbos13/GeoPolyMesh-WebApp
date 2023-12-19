@@ -28,7 +28,7 @@ export function warn(...data) {
         if (piece == "") {
             console.log("");
         } else {
-            console.log(`\x1b[1m\x1b[33m[WARNING]\x1b[0m `, piece);
+            console.warn(`\x1b[1m\x1b[33m[WARNING]\x1b[0m `, piece);
         }
     }
 }
@@ -42,7 +42,7 @@ export function error(...data) {
         if (piece == "") {
             console.log("");
         } else {
-            console.log(`\x1b[1m\x1b[31m[ERROR]\x1b[0m `, piece);
+            console.error(`\x1b[1m\x1b[31m[ERROR]\x1b[0m `, piece);
         }
     }
 }
