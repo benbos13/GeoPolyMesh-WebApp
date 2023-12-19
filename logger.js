@@ -79,12 +79,15 @@ export function progressbar(progress, total, width) {
     let done_percent = Math.floor(100 * progress / total);
     
     if (progress == 0) {
-        console.log(`\x1b[1m\x1b[34m[PROGRESS]\x1b[0m\t \x1b[34m\x1b[1m${"█".repeat(done)}\x1b[0m\x1b[38;5;240m${"█".repeat(width - done)}\x1b[0m  ${done_percent}% `);
+        console.log(`\x1b[1m\x1b[34m[PROGRESS]\x1b[0m\t \x1b[0m${"█".repeat(width)}\x1b[0m  0% `);
     }
 
-    process.stdout.write(`\r\x1b[1m\x1b[34m[PROGRESS]\x1b[0m\t \x1b[34m\x1b[1m${"█".repeat(done)}${char}\x1b[0m${"░".repeat(width - 1 - done)}\x1b[0m  ${done_percent}% `);
+    if (progress < total) {
+        process.stdout.write(`\r\x1b[1m\x1b[34m[PROGRESS]\x1b[0m\t \x1b[34m\x1b[1m${"█".repeat(done)}${char}\x1b[0m${"░".repeat(width - 1 - done)}\x1b[0m  ${done_percent}% `);
+    }
 
     if (progress >= total) {
-        console.log("");
+        process.stdout.write(`\r`);
+        console.log(`\x1b[1m\x1b[34m[PROGRESS]\x1b[0m\t \x1b[34m\x1b[1m${"█".repeat(width)}\x1b[0m  100% `);
     }
 }
