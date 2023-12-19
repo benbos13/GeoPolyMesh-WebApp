@@ -7,6 +7,7 @@
 
 import * as fs from "fs";
 import * as Types from "./types.js";
+import * as Logger from "./logger.js";
 
 
 /**
@@ -15,9 +16,7 @@ import * as Types from "./types.js";
  * @returns {{tags: Types.Tag[], file_structure: Types.Node}} The fully loaded configuration file.
  */
 function configure(file_url) {
-    if (!fs.existsSync(file_url)) {
-        throw SyntaxError("Given file does not exist : " + file_url);
-    }
+    Logger.assert(!fs.existsSync(file_url), SyntaxError, "Given file does not exist : " + file_url);
 
     let file_stream = fs.readFileSync(file_url, {encoding: "utf-8"});
     let data = JSON.parse(file_stream);
@@ -38,15 +37,13 @@ function configure(file_url) {
             rootTag = tag.name;
         }
     }
-    if (rootTag == "") {
-        throw SyntaxError("One tag should be marked as root tag.");
-    }
+
+    Logger.assert(rootTag == "", SyntaxError, "One tag should be marked as root tag.");
 
     let file_structure = new Types.Node(data.fileStructure, tags);
-    if (file_structure.tag != rootTag) {
-        throw SyntaxError(`First node in file structure should be the root tag ("${rootTag}" tag).`);
-    }
 
+    Logger.assert(file_structure.tag != rootTag, SyntaxError, `First node in file structure should be the root tag ("${rootTag}" tag).`);
+    
     return {tags, file_structure};
 }
 
