@@ -11,9 +11,12 @@
  */
 export function log(...data) {
     for (let piece of data) {
-        console.log(`\x1b[1m[LOG]\x1b[0m `, piece);
+        if (piece == "") {
+            console.log("");
+        } else {
+            console.log(`\x1b[1m[LOG]\x1b[0m `, piece);
+        }
     }
-    console.log("");
 }
 
 /**
@@ -22,9 +25,12 @@ export function log(...data) {
  */
 export function warn(...data) {
     for (let piece of data) {
-        console.log(`\x1b[1m\x1b[33m[WARNING]\x1b[0m `, piece);
+        if (piece == "") {
+            console.log("");
+        } else {
+            console.log(`\x1b[1m\x1b[33m[WARNING]\x1b[0m `, piece);
+        }
     }
-    console.log("");
 }
 
 /**
@@ -33,9 +39,12 @@ export function warn(...data) {
  */
 export function error(...data) {
     for (let piece of data) {
-        console.log(`\x1b[1m\x1b[31m[ERROR]\x1b[0m `, piece);
+        if (piece == "") {
+            console.log("");
+        } else {
+            console.log(`\x1b[1m\x1b[31m[ERROR]\x1b[0m `, piece);
+        }
     }
-    console.log("");
 }
 
 /**
@@ -46,7 +55,7 @@ export function error(...data) {
  */
 export function assert(condition, errorClass, message) {
     if (!condition) {
-        error("During assertion...", message);
+        error("During assertion...", message, "");
         throw errorClass(message);
     }
 }
