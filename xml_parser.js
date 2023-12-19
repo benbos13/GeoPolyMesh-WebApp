@@ -36,10 +36,10 @@ function readTag(file, start) {
     let is_affecting = false;
     let is_self_closed = false;
     
-    Logger.assert(file[start] != "<", SyntaxError, "\"start\" should be the index of the first \"<\" character.");
+    Logger.assert(file[start] == "<", SyntaxError, "\"start\" should be the index of the first \"<\" character.");
 
     while (file[index] != ">") {
-        Logger.assert(!file[index] || file[index] == "<", SyntaxError, "Tag should always be closed by \">\" character.");
+        Logger.assert(file[index] && file[index] != "<", SyntaxError, "Tag should always be closed by \">\" character.");
 
         if (file[index] == "/") {
             is_self_closed = true;
@@ -52,7 +52,7 @@ function readTag(file, start) {
         }
 
         if (file[index].match(/[0-9a-zA-Z_\-]/)) {
-            Logger.assert(is_self_closed, SyntaxError, "Tag can not contain caracters other than \" \" or \">\" after beeing self-closed.");
+            Logger.assert(!is_self_closed, SyntaxError, "Tag can not contain caracters other than \" \" or \">\" after beeing self-closed.");
             
             [index, current_token] = readToken(file, index);
             token_count++;
@@ -63,16 +63,16 @@ function readTag(file, start) {
         }
 
         if (file[index] == "=") {
-            Logger.assert(is_self_closed, SyntaxError, "Tag can not contain caracters other than \" \" or \">\" after beeing self-closed.");
-            Logger.assert(token_count < 2, SyntaxError, "Affectation should start from second token.");
+            Logger.assert(!is_self_closed, SyntaxError, "Tag can not contain caracters other than \" \" or \">\" after beeing self-closed.");
+            Logger.assert(token_count > 1, SyntaxError, "Affectation should start from second token.");
 
             is_affecting = true;
             index++;
         }
 
         if (file[index].match(/[\"\']/)) {
-            Logger.assert(is_self_closed, SyntaxError, "Tag can not contain caracters other than \" \" or \">\" after beeing self-closed.");
-            Logger.assert(!is_affecting, SyntaxError, "Strings should be in the right hand side of affectation.");
+            Logger.assert(!is_self_closed, SyntaxError, "Tag can not contain caracters other than \" \" or \">\" after beeing self-closed.");
+            Logger.assert(is_affecting, SyntaxError, "Strings should be in the right hand side of affectation.");
 
             [index, current_string] = readString(file, index);
 
@@ -123,4 +123,4 @@ function readString(file, start) {
     return [index + 1, string];
 }
 
-console.log(readTag(`<test value="ok" /test>`, 0));
+Logger.log(readTag(`<test value="ok" />`, 0));
