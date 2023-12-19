@@ -5,6 +5,9 @@
  */
 
 
+import { inspect } from "util";
+
+
 /**
  * Logs data in the console.
  * @param  {...any} data The data to log.
@@ -14,6 +17,7 @@ export function log(...data) {
         if (piece == "") {
             console.log("");
         } else {
+            piece = typeof piece == "object" ?  inspect(piece, false, null, true) : piece;
             console.log(`\x1b[1m[LOG]\x1b[0m `, piece);
         }
     }
@@ -28,6 +32,7 @@ export function warn(...data) {
         if (piece == "") {
             console.log("");
         } else {
+            piece = typeof piece == "object" ?  inspect(piece, false, null, true) : piece;
             console.warn(`\x1b[1m\x1b[33m[WARNING]\x1b[0m `, piece);
         }
     }
@@ -42,6 +47,7 @@ export function error(...data) {
         if (piece == "") {
             console.log("");
         } else {
+            piece = typeof piece == "object" ?  inspect(piece, false, null, true) : piece;
             console.error(`\x1b[1m\x1b[31m[ERROR]\x1b[0m `, piece);
         }
     }

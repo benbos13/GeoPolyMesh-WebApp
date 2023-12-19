@@ -11,13 +11,82 @@ import * as Logger from "./logger.js";
 
 
 /**
+ * @typedef ReadTag
+ * @property {string} name The tag name
+ * @property {{[argName: string]: string}} args The tag arguments
+ * @property {boolean} is_closing Is the tag a closing tag ?
+ * @property {boolean} is_self_closed Is the tag a self-closed ?
+ */
+
+
+/**
  * Read a XML file given a JSON configuration file.
  * @param {string} file_url The XML file to read.
  */
 function read(file_url) {
-    let raw_data = fs.readFileSync(file_url, {encoding: "utf-8"}).trim();
+    let file = fs.readFileSync(file_url, {encoding: "utf-8"}).trim();
+    let root = "";
+    let tag;
+    let tag_stack = [];
+    let current_value = "";
+    let index = 0;
 
+    while(file[index]) {
+        if (file[index] == "<") {
+            if (tag_stack.length) {
+                tag_stack.at(-1).value += current_value + " ";
+                current_value = "";
+            }
 
+            [index, tag] = readTag(file, index);
+            
+            if (tag == null) {
+                continue;
+            }
+
+            if (root == "") {
+                root = tag.name;
+            }
+
+            tag.children = [];
+            tag.value = "";
+
+            if (!tag.is_closing && !tag.is_self_closed) {
+                tag_stack.push(tag);
+            }
+
+            if (tag.is_closing) {
+                Logger.assert(tag.name == tag_stack.at(-1).name, SyntaxError, "XML tags can not be intertwined.");
+
+                tag = tag_stack.pop();
+                delete tag.is_closing;
+                delete tag.is_self_closed;
+                tag.value = tag.value.trim().replaceAll("\n", " ");
+
+                if (tag.name == root) {
+                    return tag;
+                }
+
+                tag_stack.at(-1).children.push(tag);
+            }
+
+            if (tag.is_self_closed) {
+                delete tag.is_closing;
+                delete tag.is_self_closed;
+                tag.value = tag.value.trim().replaceAll("\n", " ");
+
+                if (tag.name == root) {
+                    return tag;
+                }
+
+                tag_stack.at(-1).children.push(tag);
+            }
+        } else {
+            current_value += file[index];
+        }
+
+        index++;
+    }
 }
 
 
@@ -25,10 +94,10 @@ function read(file_url) {
  * Reads a tag from file.
  * @param {string} file The file body in string.
  * @param {number} start The index from which we read bytes.
- * @returns {[index: number, tag]} The index at the end of tag and the tag.
+ * @returns {[index: number, tag: ReadTag]} The index at the end of tag and the tag.
  */
 function readTag(file, start) {
-    let tag = { name: "", args: {} };
+    let tag = { name: "", args: {}, is_closing: false, is_self_closed: false };
     let index = start + 1;
 
     let current_token = "";
@@ -40,6 +109,13 @@ function readTag(file, start) {
     let is_closing = false;
     
     Logger.assert(file[start] == "<", SyntaxError, "\"start\" should be the index of the first \"<\" character.");
+
+    if (file[index] == "?") {
+        let end = file.indexOf("?>", start + 2)
+        Logger.assert(end != -1, SyntaxError, "Missing \"?>\" closing sequence for XML prolog.");
+
+        return [end + 2, null];
+    }
 
     while (file[index] != ">") {
         Logger.assert(file[index] && file[index] != "<", SyntaxError, "Tag should always be closed by \">\" character.");
@@ -90,9 +166,10 @@ function readTag(file, start) {
         }
     }
 
-    Logger.assert(token_count, SyntaxError, "Tag should have a name.")
+    Logger.assert(token_count, SyntaxError, "Tag should have a name.");
 
-    tag.is_closing = is_self_closed || is_closing
+    tag.is_closing = is_closing;
+    tag.is_self_closed = is_self_closed;
 
     return [index, tag];
 }
@@ -136,3 +213,5 @@ function readString(file, start) {
     return [index + 1, string];
 }
 
+Logger.log("Fichier XML input.xml")
+Logger.log(read("pattern/input.xml"));
