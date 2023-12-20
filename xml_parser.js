@@ -1,35 +1,40 @@
 /**
- * @file Parser that uses JSON configuration file to write/read XML files.
+ * @file Parser that writes/reads XML files.
  * @author Kevin Fedyna <kevin.fedyna@etu.univ-amu.fr> [https://github.com/fedyna-k/]
  * @version 0.0.1
  */
 
 
 import * as fs from "fs";
-import * as Types from "./types.js";
 import * as Logger from "./logger.js";
+import { checkType } from "./types.js";
 
 
 /**
- * @typedef ReadTag
- * @property {string} name The tag name
- * @property {{[argName: string]: string}} args The tag arguments
+ * @typedef IOTag
+ * @property {string} name The tag name.
+ * @property {{[argName: string]: string}} args The tag arguments.
+ * @property {IOTag[]} children The tag children.
+ * @property {string} value The tag value.
  * @property {boolean} is_closing Is the tag a closing tag ?
  * @property {boolean} is_self_closed Is the tag a self-closed ?
  */
 
 
 /**
- * Read a XML file given a JSON configuration file.
+ * Read an XML file.
  * @param {string} file_url The XML file to read.
+ * @returns {IOTag} The root tag.
+ * @throws {SyntaxError} If the XML is not well-formed.
  */
 function read(file_url) {
     let file = fs.readFileSync(file_url, {encoding: "utf-8"}).trim();
+    let index = 0;
+
     let root = "";
     let tag;
     let tag_stack = [];
     let current_value = "";
-    let index = 0;
 
     while(file[index]) {
         if (file[index] == "<") {
@@ -40,6 +45,7 @@ function read(file_url) {
 
             [index, tag] = readTag(file, index);
             
+            // Choice is to not take into account XML prolog as most XML are now in utf-8.
             if (tag == null) {
                 continue;
             }
@@ -87,6 +93,8 @@ function read(file_url) {
 
         index++;
     }
+
+    throw SyntaxError("Root tag was not closed.");
 }
 
 
@@ -94,7 +102,7 @@ function read(file_url) {
  * Reads a tag from file.
  * @param {string} file The file body in string.
  * @param {number} start The index from which we read bytes.
- * @returns {[index: number, tag: ReadTag]} The index at the end of tag and the tag.
+ * @returns {[index: number, tag: IOTag]} The index at the end of tag and the tag.
  */
 function readTag(file, start) {
     let tag = { name: "", args: {}, is_closing: false, is_self_closed: false };
@@ -110,6 +118,7 @@ function readTag(file, start) {
     
     Logger.assert(file[start] == "<", SyntaxError, "\"start\" should be the index of the first \"<\" character.");
 
+    // Choice is to not take into account XML prolog as most XML are now in utf-8.
     if (file[index] == "?") {
         let end = file.indexOf("?>", start + 2)
         Logger.assert(end != -1, SyntaxError, "Missing \"?>\" closing sequence for XML prolog.");
@@ -213,5 +222,59 @@ function readString(file, start) {
     return [index + 1, string];
 }
 
-Logger.log("Fichier XML input.xml")
-Logger.log(read("pattern/input.xml"));
+
+/**
+ * Write JSON data into xml file.
+ * @param {string} file_url The file URL in which we want to write the data.
+ * @param {IOTag} data The data to parse into XML
+ */
+function write(file_url, data) {
+    let content = `<?xml version="1.0" encoding="utf-8" standalone="yes"?>\n`;
+    content += createToken(data);
+
+    fs.writeFileSync(file_url, content);
+}
+
+
+/**
+ * Parse JSON IOTag to XML tag string.
+ * @param {IOTag} data The data to parse into XML
+ * @param {number} shift The shift in spaces to apply
+ */
+function createToken(data, shift=0) {
+    checkType(data.name, "name", "string", false);
+    checkType(data.value, "value", "string");
+    checkType(data.children, "children", "array");
+    checkType(data.args, "args", "object");
+
+    data.value = data.value ?? "";
+    data.children = data.children ?? [];
+    data.args = data.args ?? {};
+
+    let space = " ".repeat(shift);
+
+    let args = "";
+    for (let argName in data.args) {
+        let value = data.args[argName].toString();
+        value = value.replaceAll("\"", "&quot;")
+
+        args += ` ${argName}="${value}"`;
+    }
+
+    if (!data.value && data.children.length == 0) {
+        return `${space}<${data.name}${args}/>`;
+    }
+
+    let content = `${space}<${data.name}${args}>\n`;
+    if (data.value) {
+        content += `${space}    ${data.value}\n`;
+    }
+    
+    for (let child of data.children) {
+        content += createToken(child, shift + 4) + "\n";
+    }
+
+    content += `${space}</${data.name}>`;
+    
+    return content;
+}

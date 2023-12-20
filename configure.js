@@ -25,24 +25,24 @@ function configure(file_url) {
     Types.checkType(data.fileStructure, "fileStructure", "object", false);
 
     let tags = [];
-    let rootTag = "";
+    let root_tag = "";
     for (let tag_constructor of data.tags) {
         let tag = new Types.Tag(tag_constructor);
         tags.push(tag);
         
         if (tag.isRoot) {
-            if (rootTag != "") {
+            if (root_tag != "") {
                 throw SyntaxError("Only one tag should be root tag.");
             }
-            rootTag = tag.name;
+            root_tag = tag.name;
         }
     }
 
-    Logger.assert(rootTag != "", SyntaxError, "One tag should be marked as root tag.");
+    Logger.assert(root_tag != "", SyntaxError, "One tag should be marked as root tag.");
 
     let file_structure = new Types.Node(data.fileStructure, tags);
 
-    Logger.assert(file_structure.tag == rootTag, SyntaxError, `First node in file structure should be the root tag ("${rootTag}" tag).`);
+    Logger.assert(file_structure.tag == root_tag, SyntaxError, `First node in file structure should be the root tag ("${root_tag}" tag).`);
 
     return {tags, file_structure};
 }
