@@ -5,6 +5,7 @@
  */
 
 
+import { readFileSync } from "fs";
 import { inspect } from "util";
 
 
@@ -33,7 +34,7 @@ export function warn(...data) {
             console.log("");
         } else {
             piece = typeof piece == "object" ?  inspect(piece, false, null, true) : piece;
-            console.warn(`\x1b[1m\x1b[33m[WARNING]\x1b[0m\x1b[33m\t`, piece);
+            console.warn(`\x1b[1m\x1b[33m[WARNING]\x1b[0m\x1b[33m\t`, piece, "\x1b[0m");
         }
     }
 }
@@ -48,7 +49,7 @@ export function error(...data) {
             console.log("");
         } else {
             piece = typeof piece == "object" ?  inspect(piece, false, null, true) : piece;
-            console.error(`\x1b[1m\x1b[31m[ERROR]\x1b[0m\x1b[31m\t\t`, piece);
+            console.error(`\x1b[1m\x1b[31m[ERROR]\x1b[0m\x1b[31m\t\t`, piece, "\x1b[0m");
         }
     }
 }
@@ -90,4 +91,21 @@ export function progressbar(progress, total, width) {
         process.stdout.write(`\r`);
         console.log(`\x1b[1m\x1b[34m[PROGRESS]\x1b[0m\t \x1b[34m\x1b[1m${"█".repeat(width)}\x1b[0m  100% `);
     }
+}
+
+
+/**
+ * Displays help message.
+ */
+export function help() {
+    console.log(readFileSync("./help.txt", { encoding: "utf-8" }));
+}
+
+/**
+ * Displays version message.
+ */
+export function version() {
+    let full_message = readFileSync("./help.txt", { encoding: "utf-8" });
+    // We add \r? to handle both unix and windows.
+    console.log(full_message.split(/(\r?\n){3}/)[0], "\n");
 }

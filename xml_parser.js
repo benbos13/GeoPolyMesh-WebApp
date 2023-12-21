@@ -27,7 +27,7 @@ import { checkType } from "./types.js";
  * @returns {IOTag} The root tag.
  * @throws {SyntaxError} If the XML is not well-formed.
  */
-function read(file_url) {
+export function read(file_url) {
     let file = fs.readFileSync(file_url, {encoding: "utf-8"}).trim();
     let index = 0;
 
@@ -228,7 +228,7 @@ function readString(file, start) {
  * @param {string} file_url The file URL in which we want to write the data.
  * @param {IOTag} data The data to parse into XML
  */
-function write(file_url, data) {
+export function write(file_url, data) {
     let content = `<?xml version="1.0" encoding="utf-8" standalone="yes"?>\n`;
     content += createToken(data);
 
