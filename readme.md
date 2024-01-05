@@ -1,4 +1,8 @@
-# Advanced XML Parser
+<div style="text-align: center;">
+    <img style="filter: invert(1)" src="frontend/src/assets/logo.svg" height="256" alt="logo">
+</div>
+
+# INGEO - GeoPolyMesh Input Manager
 
 The point is to create a JSON file that is capable of validating (or invalidating) XML files with theses constraints :
 - Validate the XML structure (like an XSD file would).
