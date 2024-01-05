@@ -1,6 +1,6 @@
-<div style="text-align: center;">
-    <img style="filter: invert(1)" src="frontend/src/assets/logo.svg" height="256" alt="logo">
-</div>
+<p align="center">
+    <img src="white_logo.svg" height="256" alt="logo">
+</p>
 
 # INGEO - GeoPolyMesh Input Manager
 
