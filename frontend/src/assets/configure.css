@@ -1,0 +1,86 @@
+/* ---------------------  GRID FORM LAYOUT  --------------------- */
+
+
+form {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 0.5em 1em;
+}
+
+form > h3 {
+    grid-column: span 2;
+}
+
+#possible-values, #bindings {
+    grid-column: 2;
+}
+
+.value {
+    display: flex;
+    gap: 1em;
+    flex-direction: row;
+}
+
+.value > img, .tag-arg > img {
+    cursor: pointer;
+}
+
+.double-input {
+    display: flex;
+    gap: 1em;
+}
+
+.form-buttons {
+    margin-top: 1.5em;
+    grid-column: span 2;
+    display: flex;
+    justify-content: space-evenly;
+}
+
+
+/* ---------------------  GRID LAYOUT FOR SUMMARY  --------------------- */
+
+
+.tag-summary {
+    grid-column: span 2;
+
+    display: grid;
+    grid-template-columns: auto 1fr;
+    border: 1px solid var(--foreground-lighter);
+    background-color: var(--foreground-lighter);
+    gap: 1px;
+}
+
+.tag-summary > div {
+    padding: 0.25em 0.5em;
+}
+
+.tag-summary > div:not(.tag-summary-title) {
+    background-color: var(--background);
+    font-style: italic;
+}
+
+.tag-summary > div.tag-summary-title {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: var(--background-lighter);
+    font-weight: 700;
+}
+
+.tag-summary > div.tag-summary-full.tag-summary-title {
+    grid-column: span 2;
+}
+
+.tag-summary > .tag-summary {
+    grid-column: 2;
+    border: none;
+    gap: 0;
+    padding: 0;
+}
+
+.tag-summary > .tag-summary > div.tag-summary-title {
+    background-color: var(--background);
+    display: block;
+    font-weight: 700;
+}

@@ -1,0 +1,172 @@
+/* Hand made with love, no framework used */
+
+/* ---------------------  IMPORTS  --------------------- */
+
+
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800&display=swap');
+
+
+/* ---------------------  GLOBAL  --------------------- */
+
+:root {
+    --background: #fafaff;
+    --background-lighter: #ececf1;
+    
+    --foreground: #1a1a1f;
+    --foreground-lighter: #777;
+    
+    --primary-color: #00aaff;
+
+    --valid: #26d980;
+    --invalid: #e20505;
+}
+
+* {
+    box-sizing: border-box;
+    line-height: 1.5;
+}
+
+p, h1, h2, h3, h4, h5, h6, div, input, label, select, option {
+    font-family: Jetbrains Mono, monospace;
+    font-weight: 400;
+    color: var(--foreground);
+}
+
+html {
+    margin: 0;
+    padding: 0;
+    min-height: 100vh;
+    background-color: var(--background);
+}
+
+body {
+    margin: 0;
+    padding: 0;
+    min-height: 100vh;
+
+    display: grid;
+    grid-template-rows: auto 1fr auto;
+}
+
+body > * {
+    padding: 0.5em 2em;
+}
+
+.button {
+    background-color: transparent;
+    padding: 0.5em 1em;
+    border: 2px solid var(--primary-color);
+    border-radius: .5em;
+    user-select: none;
+
+    transition: transform 200ms cubic-bezier(.14,1.94,.52,1.41),
+                color 200ms ease-out;
+}
+
+.button:hover {
+    transform: scale(1.1);
+    color: var(--primary-color);
+    cursor: pointer;
+}
+
+.button:active {
+    transform: scale(1.2);
+}
+
+.blue {
+    color: var(--primary-color);
+}
+
+
+/* ---------------------  INPUT STYLES  --------------------- */
+
+
+input, select {
+    font-size: 1em;
+}
+
+[type="text"], [type="number"], select {
+    width: 100%;
+    background-color: transparent;
+    border: none;
+    border-bottom: 2px solid var(--foreground-lighter);
+    border-radius: 0.1em;
+    outline: none;
+    transition: border 100ms ease-in-out;
+}
+
+[type="text"]:valid, [type="number"]:valid, select:valid {
+    border-bottom: 2px solid var(--valid);
+}
+
+[type="text"]:invalid, [type="number"]:invalid, select:invalid {
+    border-bottom: 2px solid var(--invalid);
+}
+
+select:invalid {
+    color: var(--foreground-lighter);
+}
+
+[type="checkbox"] {
+    justify-self: left;
+}
+
+
+/* ---------------------  HEADER  --------------------- */
+
+
+header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+header img {
+    height: 6em;
+}
+
+#title-div {
+    display: flex;
+    gap: 1em;
+    align-items: center;
+    padding: 0.5em;
+}
+
+#title {
+    margin: 0;
+    font-weight: 200;
+    font-size: 2.75em;
+    letter-spacing: 0.12em;
+    line-height: 1;
+}
+
+#sub-title {
+    margin: 0;
+    font-style: italic;
+    color: var(--foreground-lighter);
+}
+
+#header-buttons {
+    display: flex;
+    gap: 1em;
+}
+
+
+/* ---------------------  FOOTER  --------------------- */
+
+
+footer {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 1em;
+}
+
+footer > img {
+    height: 2.5em;
+    filter : invert(48%) sepia(0%) saturate(0%) hue-rotate(265deg) brightness(97%) contrast(89%);
+}
+
+footer > p {
+    color: var(--foreground-lighter);
+}

@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="fr">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>INGEO - GeoPolyMesh Input Manager</title>
+
+        <link rel="shortcut icon" href="assets/logo.svg" type="image/svg">
+        <link rel="stylesheet" href="assets/global.css">
+        <link rel="stylesheet" href="assets/configure.css">
+        <script src="scripts/pages.js" defer></script>
+        <script src="scripts/globals.js" defer></script>
+        <script src="scripts/configure.js" defer></script>
+    </head>
+
+    <body>
+        <header>
+            <div id="title-div">
+                <img src="assets/logo.svg" alt="logo">
+                <div>
+                    <h1 id="title">INGEO</h1>
+                    <p id="sub-title">The user-friendly GeoPolyMesh input manager</p>
+                </div>
+            </div>
+            <div id="header-buttons">
+                <div class="button">How to use ?</div>
+                <div class="button">Configure</div>
+            </div>
+        </header>
+
+        <section id="main">
+            <p>Main section</p>
+        </section>
+
+        <section id="how-to-use">
+            <p>Tutorial section</p>
+        </section>
+
+        <section id="configuration">
+            <h2>Tag list</h2>
+            <form id="tag-creator">
+                <h3>General information</h3>
+                <label for="name">Tag name</label>
+                <input id="name" name="name" type="text" placeholder="tag-name_example" autocomplete="off" pattern="(?![Xx][Mm][Ll])[A-Za-z_][A-Za-z0-9_\-]*" required>
+                <label for="isRoot">Is document root?</label>
+                <input id="isRoot" name="isRoot" type="checkbox">
+
+                <h3>Argument information</h3>
+
+                <label for="arg-name">Argument name</label>
+                <input id="arg-name" name="arg-name" type="text" placeholder="argument-name_example" autocomplete="off" pattern="[A-Za-z_][A-Za-z0-9_\-]*" required>
+                <label for="arg-type">Argument type</label>
+                <select id="arg-type" name="arg-type" required>
+                    <option value="" selected>Select a type...</option>
+                    <option value="string">string</option>
+                    <option value="float">float</option>
+                    <option value="double">double</option>
+                    <option value="int8">int8</option>
+                    <option value="uint8">uint8</option>
+                    <option value="int16">int16</option>
+                    <option value="uint16">uint16</option>
+                    <option value="int32">int32</option>
+                    <option value="uint32">uint32</option>
+                    <option value="int64">int64</option>
+                    <option value="uint64">uint64</option>
+                </select>
+                <label for="is-mandatory">Is mandatory?</label>
+                <input id="is-mandatory" name="is-mandatory" type="checkbox">
+
+                <label for="possible-value">Possible values</label>
+                <input id="possible-value" name="possible-value" type="text" placeholder="Enter new value..." autocomplete="off" required>
+                <div id="possible-values"></div>
+
+                <label for="binding-arg">Bindings</label>
+                <div class="double-input">
+                    <select id="binding-arg" name="binding-arg" required>
+                        <option value="" selected>Select an argument...</option>
+                    </select>
+                    <input id="binding-regex" name="binding-regex" type="text" placeholder="Enter regular expression..." autocomplete="off" required>
+                </div>
+                <div id="bindings"></div>
+                
+                <div class="form-buttons">
+                    <div id="create-arg" class="button">Create argument</div>
+                </div>
+
+                <h3>Tag summary</h3>
+                <div id="tag-summary" class="tag-summary">
+                    <div class="tag-summary-title">Tag name</div>
+                    <div id="display-tag-name"></div>
+                    <div class="tag-summary-title">Is root?</div>
+                    <div id="display-tag-root">false</div>
+                    <div class="tag-summary-title tag-summary-full">Arguments</div>
+                </div>
+                
+                <div class="form-buttons">
+                    <div id="create-tag" class="button">Create tag</div>
+                </div>
+            </form>
+
+            <h2>File structure</h2>
+        </section>
+
+        <footer>
+            <img src="assets/logo.svg" alt="logo">
+            <p>made with love &amp; coffee by Kevin Fedyna</p>
+        </footer>
+    </body>
+</html>
