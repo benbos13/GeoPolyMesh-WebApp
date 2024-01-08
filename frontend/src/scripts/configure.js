@@ -41,21 +41,11 @@ function configure_value_input() {
 
     ARG_VALUE_INPUT.type = "number";
 
-    if (selected_type == "float") {
-        ARG_VALUE_INPUT.min = -3.402823466e38;
-        ARG_VALUE_INPUT.max = 3.402823466e38;
-    } else if (selected_type == "double") {
-        ARG_VALUE_INPUT.min = -1.7976931348623158e308;
-        ARG_VALUE_INPUT.max = 1.7976931348623158e308;
-    } else if (selected_type.startsWith("uint")) {
-        let bit_number = BigInt(selected_type.slice(4));
-        ARG_VALUE_INPUT.min = 0;
-        ARG_VALUE_INPUT.max = 2n ** bit_number - 1n;
-    } else {
-        let bit_number = BigInt(selected_type.slice(3));
-        ARG_VALUE_INPUT.min = -1n * 2n ** (bit_number - 1n);
-        ARG_VALUE_INPUT.max = 2n ** (bit_number - 1n) - 1n;
-    }
+    let unsigned = selected_type.startsWith("u")
+    let type = unsigned ? selected_type.slice(1) : selected_type;
+
+    ARG_VALUE_INPUT.min = LIMITS[type].min;
+    ARG_VALUE_INPUT.max = unsigned ? LIMITS[type].unsigned_max : LIMITS[type].max;
 }
 
 
@@ -218,6 +208,7 @@ function display_arguments() {
             TAG_SUMMARY.removeChild(wrapper);
             TAG_SUMMARY.removeChild(button_wrapper);
             
+            configure_value_input();
             configure_bindings();
             display_arguments();
         };
@@ -231,6 +222,7 @@ function display_arguments() {
             TAG_SUMMARY.removeChild(wrapper);
             TAG_SUMMARY.removeChild(button_wrapper);
             
+            configure_value_input();
             configure_bindings();
             display_arguments();
         };
@@ -305,6 +297,7 @@ ARG_CREATION.onclick = () => {
     BINDINGS.innerHTML = "";
 
     display_arguments();
+    configure_value_input();
     configure_bindings();
 }
 

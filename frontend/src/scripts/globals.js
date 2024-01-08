@@ -40,3 +40,39 @@ let buffered_argument = {
     possibleValues: [],
     bindings: {}
 };
+
+
+/**
+ * All hard coded limits as JavaScript works only with doubles.
+ * Input min and max are coded as strings.
+ */
+const LIMITS = {
+    float: {
+        min: "-3.402823466e38",
+        max: "3.402823466e38"
+    },
+    double: {
+        min: "-1.7976931348623158e308",
+        max: "1.7976931348623158e308"
+    },
+    int8: {
+        min: "-128",
+        max: "127",
+        unsigned_max: "255" 
+    },
+    int16: {
+        min: "-32768",
+        max: "32767",
+        unsigned_max: "65535"
+    },
+    int32: {
+        min: "-2147483648",
+        max: "2147483647",
+        unsigned_max: "4294967295"
+    },
+    int64: {
+        min: "-9223372036854775808",
+        max: "9223372036854775809",
+        unsigned_max: "18446744073709551615"
+    }
+}
