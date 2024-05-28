@@ -2,7 +2,7 @@
  * @file Frontend JS file for WebApp configuration.
  * @version 1.0.0
  * @author Kevin Fedyna <kevin.fedyna@etu.univ-amu.fr> [https://github.com/fedyna-k]
- * 
+ * @author Benjamin Bosco <benjamin.bosco@etu.univ-amu.fr> [https://github.com/benbos13/]
  * It allows to create, edit and load JSON configuration files.
  */
 

@@ -1,6 +1,7 @@
 /**
  * @file Logger file that makes code easier to read.
  * @author Kevin Fedyna <kevin.fedyna@etu.univ-amu.fr> [https://github.com/fedyna-k/]
+ * @author Benjamin Bosco <benjamin.bosco@etu.univ-amu.fr> [https://github.com/benbos13/]
  * @version 0.0.1
  */
 

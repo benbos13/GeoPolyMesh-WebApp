@@ -7,6 +7,7 @@ License:    GPL-3.0
 GitHub:     https://github.com/fedyna-k/GeoPolyMesh-WebApp
 Version:    0.0.1
 Author:     Kevin Fedyna [https://github.com/fedyna-k/]
+Author:     Benjamin Bosco [https://github.com/benbos13/]
 
 
 This WebApp allows to create, edit and validate XML input files for GeoPolyMesh (https://github.com/AlexandreMARIN/GeoPolyMesh).
