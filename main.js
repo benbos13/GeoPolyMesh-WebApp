@@ -10,7 +10,11 @@ import { configure } from "./configure.js";
 import { read, write } from "./xml_parser.js";
 import * as Logger from "./logger.js";
 import { writeFileSync, readFileSync } from "fs";
+import { start } from "./frontend/server.js";
 
+// Starting the server to upload solid files
+const port = 3000;
+start(port); 
 
 const command_arg_map = {
     "-h": 0,
@@ -54,7 +58,7 @@ if (commands.indexOf("help") != -1 || commands.indexOf("--help") != -1 || comman
 }
 
 if (commands.indexOf("-v") != -1 || commands.indexOf("--version") != -1) {
-    Logger.version();
+    Logger.version();''
     process.exit(0);
 }
 

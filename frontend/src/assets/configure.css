@@ -1,6 +1,4 @@
 /* ---------------------  GRID FORM LAYOUT  --------------------- */
-
-
 form {
     display: grid;
     grid-template-columns: auto 1fr;
@@ -37,13 +35,9 @@ form > h3 {
     justify-content: space-evenly;
 }
 
-
 /* ---------------------  GRID LAYOUT FOR SUMMARY  --------------------- */
-
-
 .tag-summary {
     grid-column: span 2;
-
     display: grid;
     grid-template-columns: auto 1fr;
     border: 1px solid var(--foreground-lighter);
@@ -83,4 +77,60 @@ form > h3 {
     background-color: var(--background);
     display: block;
     font-weight: 700;
+}
+
+
+/* ---------------------  TABS STYLES  --------------------- */
+
+
+.tabs {
+    display: flex;
+    cursor: pointer;
+}
+
+.tab {
+    padding: 10px 20px;
+    background: #f1f1f1;
+    border: 1px solid #ccc;
+    border-bottom: none;
+    margin-right: 5px;
+}
+
+.tab.active {
+    background: white;
+    border-bottom: 1px solid white;
+}
+
+.tab-content {
+    border: 1px solid #ccc;
+    padding: 20px;
+    display: none;
+}
+
+.tab-content.active {
+    display: block;
+}
+
+
+/* ---------------------  DRAG & DROP AREA  --------------------- */
+
+
+.drag-drop-area {
+    border: 2px dashed #ccc;
+    border-radius: 10px;
+    padding: 20px;
+    text-align: center;
+    color: #ccc;
+    transition: background-color 0.3s, border-color 0.3s;
+    position: relative;
+}
+.drag-drop-area.dragging {
+    background-color: #f0f0f0;
+    border-color: #333;
+    color: #333;
+}
+.drag-drop-area img {
+    max-width: 100px;
+    margin-bottom: 10px;
+    bottom: auto;
 }

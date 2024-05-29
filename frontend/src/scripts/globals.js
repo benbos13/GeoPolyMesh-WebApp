@@ -31,7 +31,7 @@ let buffered_configuration = {
 };
 
 /**
- * @type {BufferedArgument} Global variable that stores an argument of buffered configuaration.
+ * @type {BufferedArgument} Global variable that stores an argument of buffered configuration.
  */
 let buffered_argument = {
     name: "",
