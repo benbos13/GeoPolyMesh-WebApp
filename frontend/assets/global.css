@@ -170,3 +170,36 @@ footer > img {
 footer > p {
     color: var(--foreground-lighter);
 }
+
+/* ---------------------  TABS STYLES  --------------------- */
+
+
+.tabs {
+    display: flex;
+    cursor: pointer;
+}
+
+.tab {
+    padding: 10px 20px;
+    background: #f1f1f1;
+    border: 1px solid #ccc;
+    border-bottom: none;
+    margin-right: 5px;
+}
+
+.tab.active {
+    background: white;
+    border-bottom: 1px solid white;
+}
+
+.tab-content {
+    border: 1px solid #ccc;
+    padding: 20px;
+    display: none;
+}
+
+.tab-content.active {
+    display: block;
+}
+
+

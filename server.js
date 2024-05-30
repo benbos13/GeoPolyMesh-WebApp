@@ -22,7 +22,7 @@ const start = (port) => {
     app.use(cors({ origin: '*' }));
 
     // Define a route to handle file uploads
-    app.post('/upload', upload.single('file'), (req, res, next) => {
+    app.post('/api/upload', upload.single('file'), (req, res, next) => {
         const file = req.file;
         if (!file) {
             const error = new Error('Please attach a file');
@@ -32,7 +32,11 @@ const start = (port) => {
         res.send('File uploaded successfully');
     });
 
+
+
     app.listen(port, () => console.log('Server is listening on port number ' + port));
 };
 
-export { start };
+// Starting the server
+const port = 3000;
+start(port); 

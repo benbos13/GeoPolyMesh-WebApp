@@ -10,11 +10,7 @@ import { configure } from "./configure.js";
 import { read, write } from "./xml_parser.js";
 import * as Logger from "./logger.js";
 import { writeFileSync, readFileSync } from "fs";
-import { start } from "./frontend/server.js";
-
-// Starting the server to upload solid files
-const port = 3000;
-start(port); 
+import { start } from "./server.js";
 
 const command_arg_map = {
     "-h": 0,

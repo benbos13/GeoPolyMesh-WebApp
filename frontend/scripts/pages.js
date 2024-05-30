@@ -82,39 +82,3 @@ document.querySelectorAll('.tab').forEach(tab => {
     });
 });
 
-// Drag & drop area
-
-const dragDropArea = document.getElementById('drag-drop-area');
-const fileInput = document.getElementById('file-input');
-const fileList = document.getElementById('file-list');
-
-dragDropArea.addEventListener('click', () => fileInput.click());
-
-dragDropArea.addEventListener('dragover', (e) => {
-    e.preventDefault();
-    dragDropArea.classList.add('dragging');
-});
-
-dragDropArea.addEventListener('dragleave', () => {
-    dragDropArea.classList.remove('dragging');
-});
-
-dragDropArea.addEventListener('drop', (e) => {
-    e.preventDefault();
-    dragDropArea.classList.remove('dragging');
-    sendFile(e.dataTransfer.files);
-});
-
-fileInput.addEventListener('change', () => {
-    sendFile(fileInput.files);
-});
-
-function sendFile(files) {
-    fileList.innerHTML = '';
-    
-    for (let file of files) {
-        let listItem = document.createElement('li');
-        listItem.textContent = file.name;
-        fileList.appendChild(listItem);
-    }
-}
