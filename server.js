@@ -4,7 +4,7 @@ import multer from "multer";
 import cors from "cors";
 import { fileURLToPath } from "url";
 import path from "path";
-import { exec, spawn } from "child_process";
+import { So2Cov, Cov2Aniso } from "./executables.js";
 
 const app = express();
 
@@ -30,14 +30,14 @@ const start = (port) => {
 
     // POST the file to the server and execute the cpp program
     app.post('/api/upload', upload.single('file'), async (req, res, next) => {
-        const file = req.file;
-        if (!file) {
+        const SoFile = req.file;
+        if (!SoFile) {
             const error = new Error('Please attach a file');
             error.statusCode = 400;
             return next(error);
         }
         try {
-            execSo2Cov(file);
+            So2Cov(SoFile);
         } catch (error) {
             console.error(error);
             res.status(500).send('Error while uploading and executing the file');
@@ -89,33 +89,3 @@ const port = 3000;
 start(port);
 
 
-function execSo2Cov(file){
-    // Execute the command asynchronously in a new terminal window
-    const filePath = path.resolve(file.path);
-    console.log(filePath);
-    const executablePath = path.resolve(process.env.GPM_DIR, "build/Desktop_Qt_6_7_1_MSVC2019_64bit-Release/Conformity/So2Cov/release/So2Cov.exe");
-    const command = `"${executablePath}" "${filePath}"`;
-
-    let terminalCommand;
-
-    switch (process.platform) {
-        case 'win32':
-            terminalCommand = `start cmd.exe /k "${command}"`;
-            break;
-        case 'darwin':
-            terminalCommand = `osascript -e 'tell application "Terminal" to do script "${command}"'`;
-            break;
-        case 'linux':
-            terminalCommand = `gnome-terminal -- bash -c "${command}; exec bash"`;
-            break;
-        default:
-            throw new Error('Unsupported platform: ' + process.platform);
-    }
-
-    exec(terminalCommand, (error) => {
-        if (error) {
-            console.error(`exec error: ${error}`);
-            return res.status(500).send('Error while executing the file');
-        }
-    });
-}
