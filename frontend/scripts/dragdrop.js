@@ -55,7 +55,7 @@ function deleteCross (file, listItem) {
 
 function sendButton(files, listItem) {
     let sendButton = document.createElement('button');
-        sendButton.textContent = 'Send';
+        sendButton.textContent = 'Generate';
         sendButtonStyles(sendButton);
     sendButton.addEventListener('click', () => {
         sendFile(files);
@@ -85,7 +85,6 @@ async function sendFile(files) {
             body: formData
         });
         console.log('Server response:', await response.text());
-        alert("File sent successfully.");
     } catch (error) {
         console.error('Error while sending the file to the server:', error);
         alert("File not sent to the server. Please check the server connection.");

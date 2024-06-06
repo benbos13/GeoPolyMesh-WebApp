@@ -64,8 +64,6 @@ const start = (port) => {
                     console.error(`exec error: ${error}`);
                     return res.status(500).send('Error while uploading and executing the file');
                 }
-                console.log(`stdout: ${stdout}`);
-                console.error(`stderr: ${stderr}`);
                 res.status(200).send('File uploaded and executed successfully');
             });
         } catch (error) {
