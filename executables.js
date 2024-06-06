@@ -1,9 +1,9 @@
 import path from "path";
 import { exec } from "child_process";
 
-export function Cov2Aniso(){
+export function Cov2Aniso(executablePath){
     // Execute the command asynchronously in a new terminal window
-    const executablePath = path.resolve(process.env.GPM_DIR, "build/Desktop_Qt_6_7_1_MSVC2019_64bit-Release/Conformity/Cov2Anis/release/Cov2Aniso.exe");
+    executablePath = path.resolve(`"${executablePath}" + "/Cov2Aniso.exe"`);
     const command = `"${executablePath}"`;
 
     let terminalCommand;
@@ -31,11 +31,10 @@ export function Cov2Aniso(){
 
 }
 
-export function So2Cov(SoFile){
+export function So2Cov(SoFile, executablePath){
     // Execute the command asynchronously in a new terminal window
     const filePath = path.resolve(SoFile.path);
-    console.log(filePath);
-    const executablePath = path.resolve(process.env.GPM_DIR, "build/Desktop_Qt_6_7_1_MSVC2019_64bit-Release/Conformity/So2Cov/release/So2Cov.exe");
+    executablePath = `${executablePath}/So2Cov.exe`;
     const command = `"${executablePath}" "${filePath}"`;
 
     let terminalCommand;

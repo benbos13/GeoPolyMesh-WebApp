@@ -31,13 +31,14 @@ const start = (port) => {
     // POST the file to the server and execute the cpp program
     app.post('/api/upload', upload.single('file'), async (req, res, next) => {
         const SoFile = req.file;
+        const executablePath = path.resolve(process.env.GPM_DIR, "build/Desktop_Qt_6_7_1_MSVC2019_64bit-Release/Conformity/So2Cov/release");
         if (!SoFile) {
             const error = new Error('Please attach a file');
             error.statusCode = 400;
             return next(error);
         }
         try {
-            So2Cov(SoFile);
+            So2Cov(SoFile, executablePath);
         } catch (error) {
             console.error(error);
             res.status(500).send('Error while uploading and executing the file');
