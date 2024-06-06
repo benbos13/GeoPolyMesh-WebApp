@@ -4,7 +4,7 @@ import multer from "multer";
 import cors from "cors";
 import { fileURLToPath } from "url";
 import path from "path";
-import { So2Cov, Cov2Aniso } from "./executables.js";
+import So2Cov from "./exe.js";
 
 const app = express();
 
