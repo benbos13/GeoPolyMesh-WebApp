@@ -1,3 +1,5 @@
 pattern/
 node_modules/
 uploads/
+
+*.vtk

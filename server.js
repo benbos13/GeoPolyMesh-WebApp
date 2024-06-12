@@ -38,7 +38,7 @@ const start = (port) => {
             return next(error);
         }
         try {
-            So2Cov(SoFile, executablePath);
+            So2Cov(SoFile, executablePath); //So2Cov(SoFile, VTKFile, executablePath);
         } catch (error) {
             console.error(error);
             res.status(500).send('Error while uploading and executing the file');
