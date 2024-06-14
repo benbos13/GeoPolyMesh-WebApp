@@ -1,4 +1,4 @@
-const API_URL = "http://localhost:3000/api/upload";
+const API_URL = "http://localhost:3001/api/";
 
 const dragDropArea = document.getElementById('drag-drop-area');
 const fileInput = document.getElementById('file-input');
@@ -80,11 +80,12 @@ async function sendFile(files) {
         for (let i = 0; i < files.length; i++) {
             formData.append('file', files[i]);
         }
-        const response = await fetch(API_URL, {
+        const response = await fetch(API_URL + 'upload', {
             method: 'POST',
             body: formData
         });
         console.log('Server response:', await response.text());
+        await addCheckboxesProperties(API_URL);
     } catch (error) {
         console.error('Error while sending the file to the server:', error);
         alert("File not sent to the server. Please check the server connection.");
