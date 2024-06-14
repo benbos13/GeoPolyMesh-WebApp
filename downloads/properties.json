@@ -1,7 +1,14 @@
 {
     "Property 0": [
-        "skua_model_stratigraphy",
-        "skua_model_Flow_U",
-        "skua_model_Flow_V"
+        "resolution_map_error",
+        "newfault8",
+        "SnS_horizon_model_Geology",
+        "SnS_horizon_model_stratigraphy",
+        "SnS_horizon_model_Flow_U",
+        "SnS_horizon_model_Flow_V",
+        "SnS_horizon_model_00_NU_top_t",
+        "SnS_horizon_model_40_S_top_t",
+        "SnS_horizon_model_00_NU_top_t",
+        "SnS_horizon_model_40_S_top_t"
     ]
 }

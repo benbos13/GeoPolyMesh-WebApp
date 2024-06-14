@@ -15,7 +15,7 @@ export default function So2Cov(SoFile, executablePath){
     let terminalCommand;
     switch (process.platform) {
         case 'win32':
-            terminalCommand = `start cmd.exe /k "${So2CovCommand} & echo the program will automatically close in 3 seconds & timeout /t 3 & exit"`; //&& echo. && set /p answer=Do you want to launch the other function (Y/N)? && if /i !answer! == Y "${Cov2AnisoCommand}" else (exit 1)"`;
+            terminalCommand = `start cmd.exe /k "${So2CovCommand} & echo The program will automatically close in 5 seconds & timeout /t 5 & exit"`; //&& echo. && set /p answer=Do you want to launch the other function (Y/N)? && if /i !answer! == Y "${Cov2AnisoCommand}" else (exit 1)"`;
             break;
         case 'darwin':
             terminalCommand = `osascript -e 'tell application "Terminal" to do script "${So2CovCommand}; echo; read -p \\"Do you want to launch the other function (Y/N)? \\" answer; if [ \\"$answer\\" = \\"Y\\" ]; then echo \\"Launching other function\\"; exit 0; else exit 1; fi"'`;

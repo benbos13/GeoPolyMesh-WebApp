@@ -19,10 +19,13 @@ async function addCheckboxesProperties(API_URL){
 function dispProperties(properties){
     const propertiesDiv = document.getElementById('properties');
     propertiesDiv.innerHTML = '';
-
+    
     for (let propertyGroup in properties) {
+        const subsection = document.createElement('h2')
+        subsection.textContent = 'Select the properties that you want to use:';
         const propertyGroupTitle = document.createElement('h3');
         propertyGroupTitle.textContent = propertyGroup;
+        propertiesDiv.appendChild(subsection);
         propertiesDiv.appendChild(propertyGroupTitle);
 
         const propertyList = properties[propertyGroup];
