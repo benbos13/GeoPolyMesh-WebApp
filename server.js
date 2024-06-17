@@ -36,6 +36,11 @@ const start = (port) => {
         res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
         next();
     });
+    // For debug purposes
+    app.use((req, res, next) => {
+        console.log(`${req.method} ${req.url}`);
+        next();
+    });
 
     // POST the file to the server and execute the cpp program
     app.post('/api/upload', upload.single('file'), async (req, res, next) => {
@@ -55,6 +60,25 @@ const start = (port) => {
         }
         res.status(200).send('File uploaded and executed successfully');
 
+    });
+
+
+    app.post('/api/upload/json',  (req, res) => {
+        console.log('Received data:', req.body);
+        const fileCopy = req.body;
+    
+        if (!fileCopy) {
+            return res.status(400).send({ message: 'No data received!' });
+        }
+
+        const filePath = path.join(__dirname, 'uploads', 'properties_chosen.json');
+        fs.writeFile(filePath, JSON.stringify(fileCopy, null, 4), (err) => {
+            if (err) {
+                console.error(err);
+                return res.status(500).send({ message: 'Error while writing the file' });
+            }
+            res.status(200).send({ message: 'File written successfully' });
+        });
     });
     
     app.get('/api/download/so', (req, res, next) => {

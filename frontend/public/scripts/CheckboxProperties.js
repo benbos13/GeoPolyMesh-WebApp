@@ -1,6 +1,6 @@
 
 
-async function addCheckboxesProperties(API_URL){
+async function addCheckboxesProperties(){
     console.log('Waiting for So2Cov to finish');    
     try {
         console.log(API_URL + 'download/properties');
@@ -19,13 +19,18 @@ async function addCheckboxesProperties(API_URL){
 function dispProperties(properties){
     const propertiesDiv = document.getElementById('properties');
     propertiesDiv.innerHTML = '';
-    
+
+    // Call PropertiesSendButton and append the button to propertiesDiv
+    const sendPropertiesButton = PropertiesSendButton();
+    propertiesDiv.appendChild(sendPropertiesButton);
+
     for (let propertyGroup in properties) {
-        const subsection = document.createElement('h2')
+        const subsection = document.createElement('h2');
         subsection.textContent = 'Select the properties that you want to use:';
+        propertiesDiv.appendChild(subsection);
+
         const propertyGroupTitle = document.createElement('h3');
         propertyGroupTitle.textContent = propertyGroup;
-        propertiesDiv.appendChild(subsection);
         propertiesDiv.appendChild(propertyGroupTitle);
 
         const propertyList = properties[propertyGroup];
@@ -46,6 +51,8 @@ function dispProperties(properties){
             propertiesDiv.appendChild(document.createElement('br'));
         });
     }
+    //const sendPropertiesButton = PropertiesSendButton(data, API_URL);
+    propertiesDiv.appendChild(sendPropertiesButton);
 }
 
 function getCheckedProperties(){
@@ -58,4 +65,70 @@ function getCheckedProperties(){
         }
     }
     return checkedProperties;
+}
+
+function PropertiesSendButton() {
+    let sendPropertiesButton = document.createElement('button');
+    sendPropertiesButton.id = 'sendPropertiesButton';
+    sendPropertiesButton.textContent = 'Generate with selected properties';
+    PropertiesSendButtonStyles(sendPropertiesButton);
+
+    sendPropertiesButton.addEventListener('click', () => {
+        const checkedProperties = getCheckedProperties();
+        sendProperties(checkedProperties);
+        sendPropertiesButton.remove();
+    });
+
+    return sendPropertiesButton; // Return the button element
+}
+
+async function sendProperties(checkedProperties) { 
+    try {
+        const jsonBody = JSON.stringify(checkedProperties);
+        const response = await fetch(API_URL + 'upload/json', {
+            method: 'POST',
+            body: jsonBody,
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        });
+
+        if (!response.ok) {
+            throw new Error(`Server error: ${response.statusText}`);
+        }
+
+        const result = await response.json();
+        console.log('Server response:', result);
+    } catch (error) {
+        console.error('Error while sending the file to the server:', error);
+        alert("File not sent to the server. Please check the server connection.");
+    }
+}
+
+function PropertiesSendButtonStyles(sendButton) {
+    sendButton.style.display = 'block';
+    sendButton.style.margin = 'auto';
+    sendButton.style.marginTop = '1em';
+    sendButton.style.marginBottom = '1em';
+    sendButton.style.textAlign = 'center';
+    sendButton.style.horizontalAlign = 'middle';
+    sendButton.style.backgroundColor = 'transparent';
+    sendButton.style.padding = '0.5em 1em';
+    sendButton.style.border = '2px solid var(--primary-color)';
+    sendButton.style.borderRadius = '.5em';
+    sendButton.style.userSelect = 'none';
+    sendButton.style.transition = 'transform 200ms cubic-bezier(.14,1.94,.52,1.41), color 200ms ease-out';
+    sendButton.style.fontFamily = 'Jetbrains Mono, monospace';
+    sendButton.style.fontSize = '1em';
+
+    sendButton.addEventListener('mouseover', () => {
+        sendButton.style.transform = 'scale(1.1)';
+        sendButton.style.color = 'var(--primary-color)';
+        sendButton.style.cursor = 'pointer';
+    });
+
+    sendButton.addEventListener('mouseout', () => {
+        sendButton.style.transform = 'scale(1)';
+        sendButton.style.color = 'black';
+    });
 }
