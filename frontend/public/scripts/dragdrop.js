@@ -84,13 +84,22 @@ async function sendFile(files) {
             method: 'POST',
             body: formData
         });
-        console.log('Server response:', await response.text());
-        await addCheckboxesProperties(API_URL);
+
+        console.log('Server status:', response.status);
+        if (response.status != 200) {
+            throw new Error(`Server responded with ${response.status}`);
+        }
+        else {
+            await addCheckboxesProperties(API_URL);
+            const responseText = await response.text();
+            console.log('Server response:', responseText);
+        }        
     } catch (error) {
         console.error('Error while sending the file to the server:', error);
         alert("File not sent to the server. Please check the server connection.");
     }
 }
+
 
 
 function sendButtonStyles(sendButton){

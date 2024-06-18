@@ -1,7 +1,6 @@
 
 
-async function addCheckboxesProperties(){
-    console.log('Waiting for So2Cov to finish');    
+async function addCheckboxesProperties(){ 
     try {
         console.log(API_URL + 'download/properties');
         const response = await fetch(API_URL + 'download/properties', {
@@ -26,7 +25,7 @@ function dispProperties(properties){
 
     for (let propertyGroup in properties) {
         const subsection = document.createElement('h2');
-        subsection.textContent = 'Select the properties that you want to use:';
+        subsection.textContent = 'Select the property that you want to use:';
         propertiesDiv.appendChild(subsection);
 
         const propertyGroupTitle = document.createElement('h3');
@@ -40,7 +39,7 @@ function dispProperties(properties){
             checkbox.name = property;
             checkbox.value = property;
             checkbox.id = property;
-            checkbox.checked = true;
+            checkbox.checked = false;
             propertiesDiv.appendChild(checkbox);
 
             let label = document.createElement('label');
@@ -84,7 +83,10 @@ function PropertiesSendButton() {
 
 async function sendProperties(checkedProperties) { 
     try {
-        const jsonBody = JSON.stringify(checkedProperties);
+        const jsonObject = {
+            Property: checkedProperties
+        };
+        const jsonBody = JSON.stringify(jsonObject);
         const response = await fetch(API_URL + 'upload/json', {
             method: 'POST',
             body: jsonBody,

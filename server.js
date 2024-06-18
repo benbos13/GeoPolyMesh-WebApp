@@ -24,7 +24,10 @@ const storage = multer.diskStorage({
 // Initialize multer middleware
 const upload = multer({ storage });
 
-var isSo2CovFinished = null; // Initialization here to be able to export it
+ // Initialization here to be able to export it
+var isSo2CovFinished = null;
+var SoFile = null;
+var executablePath = path.resolve(process.env.GPM_DIR, "build/Desktop_Qt_6_7_1_MSVC2019_64bit-Release/Conformity/So2Cov/release");
 
 const start = (port) => {
     app.use(express.json());
@@ -44,34 +47,47 @@ const start = (port) => {
 
     // POST the file to the server and execute the cpp program
     app.post('/api/upload', upload.single('file'), async (req, res, next) => {
-        const SoFile = req.file;
-        const executablePath = path.resolve(process.env.GPM_DIR, "build/Desktop_Qt_6_7_1_MSVC2019_64bit-Release/Conformity/So2Cov/release");
+        SoFile = req.file;
         if (!SoFile) {
             const error = new Error('Please attach a file');
             error.statusCode = 400;
             return next(error);
         }
         try {
-             //So2Cov(SoFile, VTKFile, executablePath);
-             isSo2CovFinished = new Promise((resolve, reject) => { So2Cov(SoFile, executablePath); resolve(); });
+            isSo2CovFinished = await So2Cov(1, SoFile, executablePath);
+            if (isSo2CovFinished) {
+                res.status(200).send({ message: 'File uploaded and executed successfully' });
+            } else {
+                res.status(500).send('Error during So2Cov execution');
+            }
         } catch (error) {
             console.error(error);
             res.status(500).send('Error while uploading and executing the file');
         }
-        res.status(200).send('File uploaded and executed successfully');
+        
 
     });
 
 
     app.post('/api/upload/json',  (req, res) => {
-        console.log('Received data:', req.body);
         const fileCopy = req.body;
     
         if (!fileCopy) {
             return res.status(400).send({ message: 'No data received!' });
         }
 
-        const filePath = path.join(__dirname, 'uploads', 'properties_chosen.json');
+
+        // Transform fileCopy to match the desired JSON structure
+        const transformedData = {};
+        if (Array.isArray(fileCopy)) {
+            transformedData[`Property 0`] = fileCopy;
+        } else {
+            Object.keys(fileCopy).forEach((key, index) => {
+                transformedData[`Property ${index}`] = fileCopy[key];
+            });
+        }
+
+        const filePath = path.join(__dirname, 'downloads', 'properties.json');
         fs.writeFile(filePath, JSON.stringify(fileCopy, null, 4), (err) => {
             if (err) {
                 console.error(err);
@@ -79,6 +95,18 @@ const start = (port) => {
             }
             res.status(200).send({ message: 'File written successfully' });
         });
+
+        if (!SoFile) {
+            const error = new Error('Please attach a file');
+            error.statusCode = 400;
+            return next(error);
+        }
+        try {
+             isSo2CovFinished = new Promise((resolve, reject) => { So2Cov(0, SoFile, executablePath); resolve(); });
+        } catch (error) {
+            console.error(error);
+            res.status(500).send('Error while uploading and executing the file');
+        }
     });
     
     app.get('/api/download/so', (req, res, next) => {
@@ -118,39 +146,40 @@ const start = (port) => {
     });
 
     app.get('/api/download/properties', (req, res, next) => {
-        const directoryPath = path.join(__dirname, 'downloads');
-    
-        fs.readdir(directoryPath, (err, files) => {
-            if (err) {
-                const error = new Error('Unable to scan directory');
-                error.statusCode = 500;
-                return next(error);
-            }    
-            
-            const propertiesFiles = files.filter(file => path.extname(file) === '.json');// Filter files with .json extension
-    
-            if (propertiesFiles.length === 0) {
-                const error = new Error('No .json file found');
-                error.statusCode = 404;
-                return next(error);
-            } else if (propertiesFiles.length > 1) {
-                const error = new Error('Multiple .json files found');
-                error.statusCode = 400;
-                return next(error);
-            }
-    
-            const filePath = path.join(directoryPath, propertiesFiles[0]);
-            res.download(filePath, (err) => {
+        
+            const directoryPath = path.join(__dirname, 'downloads');
+        
+            fs.readdir(directoryPath, (err, files) => {
                 if (err) {
-                    const error = new Error('Error downloading file');
+                    const error = new Error('Unable to scan directory');
                     error.statusCode = 500;
                     return next(error);
+                }    
+                
+                const propertiesFiles = files.filter(file => path.extname(file) === '.json');// Filter files with .json extension
+        
+                if (propertiesFiles.length === 0) {
+                    const error = new Error('No .json file found');
+                    error.statusCode = 404;
+                    return next(error);
+                } else if (propertiesFiles.length > 1) {
+                    const error = new Error('Multiple .json files found');
+                    error.statusCode = 400;
+                    return next(error);
                 }
-                else {
-                    console.log('Downloaded');
-                }
+        
+                const filePath = path.join(directoryPath, propertiesFiles[0]);
+                res.download(filePath, (err) => {
+                    if (err) {
+                        const error = new Error('Error downloading file');
+                        error.statusCode = 500;
+                        return next(error);
+                    }
+                    else {
+                        console.log('Downloaded');
+                    }
+                });
             });
-        });
         });
 
     app.listen(port, () => console.log('Server is listening on port number ' + port));
